@@ -1,28 +1,31 @@
 const WebSocket = require('ws')
 
-const wss = new WebSocket.Server({ port: 3000 })
+const wss = new WebSocket.Server({ port: 2003 })
 const client = {}
 wss.on('connection', function (ws) {
     const socketId = guid()
     ws.socketId = socketId
     client[socketId] = ws
 
+    console.log('当前连接数：', Object.keys(client).length)
+
     ws.onmessage = function (event) {
-        console.log('received:', event.data)
-        for (let key in client) {
-            if (client[key].socketId !== ws.socketId) {
-                client[key].send(event.data)
-            }
-        }
+        // console.log('received:')
+        // for (let key in client) {
+        //     if (client[key].socketId !== ws.socketId) {
+        //         client[key].send(event.data)
+        //     }
+        // }
     }
 
     ws.onclose = function (event) {
-        console.log('close:', event)
+        console.log('close:')
         delete client[event.target.socketId]
+        console.log('当前连接数：', Object.keys(client).length)
     }
 
     ws.onerror = function (event) {
-        console.log('error:', event)
+        console.log('error:')
     }
 })
 

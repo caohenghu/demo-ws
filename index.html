@@ -12,7 +12,7 @@
     <input type="text">
     <button>发送</button>
     <script>
-        for (let i = 0; i < 256; i++) {
+        for (let i = 0; i < 255; i++) {
             initSocket()
         }
 
@@ -22,15 +22,17 @@
         // })
 
         function initSocket() {
-            const ws = new WebSocket('ws://demo.home.com')
+            const ws = new WebSocket('ws://ws.home.com')
 
             // 打开WebSocket连接后立刻发送一条消息:
             ws.onopen = function (res) {
                 console.log('open:', res)
 
-                setInterval(function () {
-                    ws.send(1)
-                }, 50000)
+                // (function (ws) {
+                    setInterval(function () {
+                        ws.readyState === 1 && ws.send(1)
+                    }, 50000)
+                // })(ws)
             }
 
             // 响应收到的消息:
