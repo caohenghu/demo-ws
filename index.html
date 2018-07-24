@@ -12,34 +12,46 @@
     <input type="text">
     <button>发送</button>
     <script>
-        const ws = new WebSocket('ws://localhost:3000/auth')
-
-        // 打开WebSocket连接后立刻发送一条消息:
-        ws.onopen = function (res) {
-            console.log('open:', res)
+        for (let i = 0; i < 256; i++) {
+            initSocket()
         }
 
-        // 响应收到的消息:
-        ws.onmessage = function (event) {
-            console.log('message:', event)
+        // document.querySelector('button').addEventListener('click', () => {
+        //     const val = document.querySelector('input').value
+        //     ws.send(val)
+        // })
 
-            const div = document.createElement('div')
-            div.innerText = event.data
-            document.body.appendChild(div)
+        function initSocket() {
+            const ws = new WebSocket('ws://demo.home.com')
+
+            // 打开WebSocket连接后立刻发送一条消息:
+            ws.onopen = function (res) {
+                console.log('open:', res)
+
+                setInterval(function () {
+                    ws.send(1)
+                }, 50000)
+            }
+
+            // 响应收到的消息:
+            ws.onmessage = function (event) {
+                console.log('message:', event)
+
+                // const div = document.createElement('div')
+                // div.innerText = event.data
+                // document.body.appendChild(div)
+            }
+
+            ws.onclose = function (event) {
+                console.log('close:', event)
+            }
+
+            ws.onerror = function (err) {
+                console.log('error:', err)
+            }
+
+            return ws
         }
-
-        ws.onclose = function (event) {
-            console.log('close:', event)
-        }
-
-        ws.onerror = function (err) {
-            console.log('error:', err)
-        }
-
-        document.querySelector('button').addEventListener('click', () => {
-            const val = document.querySelector('input').value
-            ws.send(val)
-        })
     </script>
 </body>
 
